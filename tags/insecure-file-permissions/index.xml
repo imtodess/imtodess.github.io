@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>insecure file permissions on Imtodess</title>
+    <link>https://imtodess.github.io/tags/insecure-file-permissions/</link>
+    <description>Recent content in insecure file permissions on Imtodess</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 14 Jul 2021 10:56:57 +0545</lastBuildDate>
+    
+	<atom:link href="https://imtodess.github.io/tags/insecure-file-permissions/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>THM | Hackpark | Walkthrough (No Metasploit)</title>
+      <link>https://imtodess.github.io/posts/2021/07/thm-hackpark-walkthrough-no-metasploit/</link>
+      <pubDate>Wed, 14 Jul 2021 10:56:57 +0545</pubDate>
+      
+      <guid>https://imtodess.github.io/posts/2021/07/thm-hackpark-walkthrough-no-metasploit/</guid>
+      <description>Exploitation Guide For Hackpark Summary In this walkthrough we will brute-force the login, and exploit the blogging platform with publicly available exploit. Then we will escalate our privileges by exploiting one of the services running on the target machine which has insecure file permissions.
+Enumeration Service Enumeration using Nmap ┌──(kali㉿kali)-[~/ctf/thm/hackpark/scans] └─$ nmap $ip -p- -Pn -vv PORT STATE SERVICE REASON 80/tcp open http syn-ack 3389/tcp open ms-wbt-server syn-ack ┌──(kali㉿kali)-[~/ctf/thm/hackpark/scans] └─$ nmap -Pn -p80,3389 -sVCT -oN nmapInitial.</description>
+    </item>
+    
+  </channel>
+</rss>

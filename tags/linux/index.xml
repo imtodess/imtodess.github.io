@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Linux on Imtodess</title>
+    <link>https://imtodess.github.io/tags/linux/</link>
+    <description>Recent content in Linux on Imtodess</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 08 Jul 2021 18:52:03 +0545</lastBuildDate>
+    
+	<atom:link href="https://imtodess.github.io/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>HTB | Ophiuchi | Walkthrough</title>
+      <link>https://imtodess.github.io/posts/2021/07/htb-ophiuchi-walkthrough/</link>
+      <pubDate>Thu, 08 Jul 2021 18:52:03 +0545</pubDate>
+      
+      <guid>https://imtodess.github.io/posts/2021/07/htb-ophiuchi-walkthrough/</guid>
+      <description>Exploitation Guide for Ophiuchi Summary: In this box, we will be exploiting yaml parsing (deserialization) vulnerability to get RCE . Then exploit the misconfigured sudo privilege to gain the root shell.
+Enumeration Nmap ┌──(root💀kali)-[/home/…/ctf/htb/ophiuchi/scans] └─# nmap -sS -sV -T4 -p- -A 10.10.10.227 -oN nmap_full_syn.txt Starting Nmap 7.91 ( &amp;lt;https://nmap.org&amp;gt; ) at 2021-06-04 22:09 EDT Stats: 0:11:21 elapsed; 0 hosts completed (1 up), 1 undergoing SYN Stealth Scan SYN Stealth Scan Timing: About 60.</description>
+    </item>
+    
+  </channel>
+</rss>

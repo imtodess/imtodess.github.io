@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Imtodess</title>
+    <link>https://imtodess.github.io/tags/</link>
+    <description>Recent content in Tags on Imtodess</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 23 Jul 2021 11:32:28 +0545</lastBuildDate>
+    
+	<atom:link href="https://imtodess.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>active Directory</title>
+      <link>https://imtodess.github.io/tags/active-directory/</link>
+      <pubDate>Fri, 23 Jul 2021 11:32:28 +0545</pubDate>
+      
+      <guid>https://imtodess.github.io/tags/active-directory/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>oscp path</title>
+      <link>https://imtodess.github.io/tags/oscp-path/</link>
+      <pubDate>Fri, 23 Jul 2021 11:32:28 +0545</pubDate>
+      
+      <guid>https://imtodess.github.io/tags/oscp-path/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>THM</title>
+      <link>https://imtodess.github.io/tags/thm/</link>
+      <pubDate>Fri, 23 Jul 2021 11:32:28 +0545</pubDate>
+      
+      <guid>https://imtodess.github.io/tags/thm/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>boot2root</title>
+      <link>https://imtodess.github.io/tags/boot2root/</link>
+      <pubDate>Wed, 14 Jul 2021 10:56:57 +0545</pubDate>
+      
+      <guid>https://imtodess.github.io/tags/boot2root/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>CTFs</title>
+      <link>https://imtodess.github.io/tags/ctfs/</link>
+      <pubDate>Wed, 14 Jul 2021 10:56:57 +0545</pubDate>
+      
+      <guid>https://imtodess.github.io/tags/ctfs/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>insecure file permissions</title>
+      <link>https://imtodess.github.io/tags/insecure-file-permissions/</link>
+      <pubDate>Wed, 14 Jul 2021 10:56:57 +0545</pubDate>
+      
+      <guid>https://imtodess.github.io/tags/insecure-file-permissions/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>privescs</title>
+      <link>https://imtodess.github.io/tags/privescs/</link>
+      <pubDate>Wed, 14 Jul 2021 10:56:57 +0545</pubDate>
+      
+      <guid>https://imtodess.github.io/tags/privescs/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Windows</title>
+      <link>https://imtodess.github.io/tags/windows/</link>
+      <pubDate>Wed, 14 Jul 2021 10:56:57 +0545</pubDate>
+      
+      <guid>https://imtodess.github.io/tags/windows/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>token access</title>
+      <link>https://imtodess.github.io/tags/token-access/</link>
+      <pubDate>Sun, 11 Jul 2021 10:24:04 +0545</pubDate>
+      
+      <guid>https://imtodess.github.io/tags/token-access/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>HTB</title>
+      <link>https://imtodess.github.io/tags/htb/</link>
+      <pubDate>Thu, 08 Jul 2021 18:52:03 +0545</pubDate>
+      
+      <guid>https://imtodess.github.io/tags/htb/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

